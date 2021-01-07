@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Load current repository hook config
+. .git/hooks/config.sh
+
+BRANCH_NAME=$(git symbolic-ref --short HEAD | grep -oE "$BRANCH_REGEXP")
+HAS_PREFIX=$(echo $(head -n1 $1) | grep -oE "^(\s*?)\[$BRANCH_REGEXP\]")
+
+if [ ! -z $BRANCH_NAME ] && [ -z $HAS_PREFIX ]; then
+	sed -i.bak -e "1s/^/[$BRANCH_NAME] /" $1
+fi
